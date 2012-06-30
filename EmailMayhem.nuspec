@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>EmailMayhem</id>
+    <version>1.0.0</version>
+    <authors>Tyler</authors>
+    <owners>Tyler</owners>
+    <projectUrl>http://github.com/tygill/EmailMayhem</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An add on module for Mayhem (mayhem.codeplex.com/) that adds events for receiving email and reactions for sending them.</description>
+    <releaseNotes>Initial release, with support for new email events and sending email actions.</releaseNotes>
+    <copyright>Copyright 2012</copyright>
+    <tags>Mayhem</tags>
+    <dependencies>
+      <dependency id="MayhemCore" version="1.0" />
+      <dependency id="MayhemWpf" version="1.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\EmailMayhem.dll" target="lib\net40\" />
+    <file src="lib\OpenPop.dll" target="lib\net40\" />
+  </files>
+</package>

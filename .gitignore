@@ -2,5 +2,10 @@
 bin
 obj
 
+# Nuget packaging
+*.mayhem
+*.nupkg
+NuGet.exe
+
 # mstest test results
-TestResults
+TestResul
