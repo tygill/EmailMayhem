@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -16,15 +17,14 @@ using System.Windows.Shapes;
 using MayhemCore;
 using MayhemWpf.UserControls;
 
-using OpenPop.Pop3;
-
 namespace EmailMayhem {
-    /// <summary>
-    /// Interaction logic for EmailReceiveEventConfig.xaml
-    /// </summary>
-    public partial class EmailReceiveEventConfig : WpfConfiguration {
 
-        public EmailReceiveEventConfig(string hostname, int port, bool useSsl, string emailAddress, string password, string subject, string from) {
+    /// <summary>
+    /// Interaction logic for SendEmailReactionConfig.xaml
+    /// </summary>
+    public partial class SendEmailReactionConfig : WpfConfiguration {
+
+        public SendEmailReactionConfig(string hostname, int port, bool useSsl, string emailAddress, string password, string to, string subject, string body) {
             InitializeComponent();
 
             Hostname = hostname;
@@ -32,8 +32,9 @@ namespace EmailMayhem {
             UseSsl = useSsl;
             EmailAddress = emailAddress;
             Password = password;
+            To = to;
             Subject = subject;
-            From = from;
+            Body = body;
         }
 
         public string Hostname { get; private set; }
@@ -46,9 +47,11 @@ namespace EmailMayhem {
 
         public string Password { get; private set; }
 
+        public string To { get; private set; }
+
         public string Subject { get; private set; }
 
-        public string From { get; private set; }
+        public string Body { get; private set; }
 
         public override void OnLoad() {
             base.OnLoad();
@@ -58,15 +61,16 @@ namespace EmailMayhem {
             useSsl.IsChecked = UseSsl;
             emailAddress.Text = EmailAddress;
             password.Password = Password;
+            to.Text = To;
             subject.Text = Subject;
-            from.Text = From;
+            body.Text = Body;
 
             Validate();
         }
 
         public override string Title {
             get {
-                return "Receive Email";
+                return "Send Email";
             }
         }
 
@@ -84,18 +88,24 @@ namespace EmailMayhem {
                 EmailAddress = emailAddress.Text;
                 // This is a fun line to have...I almost feel like I should send it in to the daily wtf
                 Password = password.Password;
+                To = to.Text;
                 Subject = subject.Text;
-                From = from.Text;
+                Body = body.Text;
 
-                using (Pop3Client client = new Pop3Client()) {
-                    client.Connect(Hostname, Port, UseSsl);
+                using (SmtpClient client = new SmtpClient(Hostname, Port)) {
+                    client.EnableSsl = UseSsl;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.Credentials = new System.Net.NetworkCredential(EmailAddress, Password);
 
-                    if (!client.Connected) {
-                        CanSave = false;
-                        return;
-                    }
+                    // I don't think this actually does any validation with this implementation unfortunately...
+                    // Oh well. Validate the old fashioned way - are strings not empty
+                }
 
-                    client.Authenticate(EmailAddress, Password);
+                // Password could maybe be empty?
+                if (string.IsNullOrWhiteSpace(Hostname) || string.IsNullOrWhiteSpace(EmailAddress) || string.IsNullOrWhiteSpace(To) || Port == 0) {
+                    // Something that isn't optional is gone
+                    Unvalidate();
+                    return;
                 }
 
                 // We got this far, this must be good
@@ -116,11 +126,11 @@ namespace EmailMayhem {
             Unvalidate();
             if (emailAddress.Text.Contains("@gmail.com") || emailAddress.Text.Contains("@googlemail.com")) {
                 if (string.IsNullOrEmpty(hostname.Text)) {
-                    hostname.Text = "pop.gmail.com";
+                    hostname.Text = "smtp.gmail.com";
                 }
             } else if (emailAddress.Text.Contains("@hotmail.com") || emailAddress.Text.Contains("@live.com")) {
                 if (string.IsNullOrEmpty(hostname.Text)) {
-                    hostname.Text = "pop3.live.com";
+                    hostname.Text = "smtp.live.com";
                 }
             }
         }
@@ -132,14 +142,14 @@ namespace EmailMayhem {
         private void hostname_TextChanged(object sender, TextChangedEventArgs e) {
             Unvalidate();
             // Fill in some defaults, just to be nice :)
-            if (hostname.Text == "pop.gmail.com") {
+            if (hostname.Text == "smtp.gmail.com") {
                 if (string.IsNullOrEmpty(port.Text)) {
-                    port.Text = "995";
+                    port.Text = "587";
                     useSsl.IsChecked = true;
                 }
-            } else if (hostname.Text == "pop3.live.com") {
+            } else if (hostname.Text == "smtp.live.com") {
                 if (string.IsNullOrEmpty(port.Text)) {
-                    port.Text = "995";
+                    port.Text = "587";
                     useSsl.IsChecked = true;
                 }
             }
@@ -158,15 +168,17 @@ namespace EmailMayhem {
             Unvalidate();
         }
 
-        // The subject and from text fields don't validate for a reason - it doesn't matter what value they have
-        // They're always valid!
+        private void to_TextChanged(object sender, TextChangedEventArgs e) {
+            To = to.Text;
+            Unvalidate();
+        }
 
         private void subject_TextChanged(object sender, TextChangedEventArgs e) {
             Subject = subject.Text;
         }
 
-        private void from_TextChanged(object sender, TextChangedEventArgs e) {
-            From = from.Text;
+        private void body_TextChanged(object sender, TextChangedEventArgs e) {
+            Body = body.Text;
         }
     }
 }

@@ -1,0 +1,26 @@
+﻿<src:WpfConfiguration x:Class="EmailMayhem.SendEmailReactionConfig"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:src="clr-namespace:MayhemWpf.UserControls;assembly=MayhemWpf"
+        Height="401" Width="244">
+    <Grid>
+        <Label Content="Email Address" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label3" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="12,38,0,0" Name="emailAddress" VerticalAlignment="Top" Width="220" TextChanged="emailAddress_TextChanged" />
+        <Label Content="Password" Height="28" HorizontalAlignment="Left" Margin="12,61,0,0" Name="label4" VerticalAlignment="Top" />
+        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="12,87,0,0" Name="password" VerticalAlignment="Top" Width="220" PasswordChanged="password_PasswordChanged" />
+        <Label Content="Email Server (SMTP)" Height="28" HorizontalAlignment="Left" Margin="12,110,0,0" Name="label1" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="12,136,0,0" Name="hostname" VerticalAlignment="Top" Width="220" TextChanged="hostname_TextChanged" AutoWordSelection="False" />
+        <Label Content="Port" Height="28" HorizontalAlignment="Left" Margin="12,159,0,0" Name="label2" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="50,161,0,0" Name="port" VerticalAlignment="Top" Width="60" TextChanged="port_TextChanged" />
+        <CheckBox Content="Use SSL" Height="16" HorizontalAlignment="Left" Margin="140,164,0,0" Name="useSsl" VerticalAlignment="Top" Checked="useSsl_Checked" Unchecked="useSsl_Unchecked" />
+        <Label Content="To" Height="28" HorizontalAlignment="Left" Margin="12,184,0,0" Name="label5" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="12,212,0,0" Name="to" VerticalAlignment="Top" Width="220" TextChanged="to_TextChanged" />
+        <Label Content="Subject (optional)" Height="28" HorizontalAlignment="Left" Margin="12,235,0,0" Name="label6" VerticalAlignment="Top" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="12,263,0,0" Name="subject" VerticalAlignment="Top" Width="220" TextChanged="subject_TextChanged" />
+        <Label Content="Body (optional)" Height="28" HorizontalAlignment="Left" Margin="12,286,0,0" Name="label7" VerticalAlignment="Top" />
+        <TextBox Height="46" HorizontalAlignment="Left" Margin="12,314,0,0" Name="body" VerticalAlignment="Top" Width="220" TextChanged="body_TextChanged" />
+        <Button Content="Check" Height="23" HorizontalAlignment="Left" Margin="87,0,0,10" Name="checkButton" VerticalAlignment="Bottom" Width="70" Click="checkButton_Click" />
+    </Grid>
+</src:WpfConfiguration>
